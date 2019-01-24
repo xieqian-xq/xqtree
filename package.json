@@ -6,7 +6,10 @@
     "dev": "gulp",
     "build": "gulp release"
   },
-  "keywords": ["gulp", "tree"],
+  "keywords": [
+    "gulp",
+    "tree"
+  ],
   "author": "xieqian",
   "license": "MIT",
   "homepage": "https://github.com/xieqian-xq/xqtree",
