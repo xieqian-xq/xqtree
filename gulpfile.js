@@ -1,6 +1,7 @@
 var gulp = require("gulp");
 var browserSync = require("browser-sync");
 var plugins = require('gulp-load-plugins')();
+var pkg = require('./package.json');
 
 var option = {
     base: 'src'
@@ -14,7 +15,7 @@ var banner = [
     ' * Licensed under the <%= pkg.license %> license',
     ' */',
     ''
-  ].join('\n');
+].join('\n');
 
 gulp.task("build:less", function () {
     gulp.src("src/*.less", option)
@@ -23,6 +24,9 @@ gulp.task("build:less", function () {
             if (path.basename === "index") {
                 path.basename = 'xqtree';
             }
+        }))
+        .pipe(plugins.header(banner, {
+            pkg: pkg
         }))
         .pipe(gulp.dest(dist))
         .pipe(browserSync.reload({
@@ -45,6 +49,9 @@ gulp.task("build:js", function () {
                 path.basename = 'xqtree';
             }
         }))
+        .pipe(plugins.header(banner, {
+            pkg: pkg
+        }))
         .pipe(gulp.dest(dist))
         .pipe(browserSync.reload({
             stream: true
@@ -52,6 +59,9 @@ gulp.task("build:js", function () {
         .pipe(plugins.uglify())
         .pipe(plugins.rename(function (path) {
             path.basename += '.min';
+        }))
+        .pipe(plugins.header(banner, {
+            pkg: pkg
         }))
         .pipe(gulp.dest(dist));
 });
@@ -66,17 +76,17 @@ gulp.task("build:html", function () {
         .pipe(plugins.tap(function (file) {
             var contents = file.contents.toString();
             contents = contents.replace(
-              /<link\s+rel="stylesheet"\s+href="(index.css)"\s+\/>/gi,
-              function() {
-                return ('<link rel="stylesheet" href="xqtree.css"/>');
-              }
+                /<link\s+rel="stylesheet"\s+href="(index.css)"\s+\/>/gi,
+                function () {
+                    return ('<link rel="stylesheet" href="xqtree.css"/>');
+                }
             );
             contents = contents.replace(
                 /<script\s+src="(index.js)"><\/script>/gi,
-                function() {
-                  return ('<script src="xqtree.js"></script>');
+                function () {
+                    return ('<script src="xqtree.js"></script>');
                 }
-              );
+            );
             file.contents = new Buffer(contents);
         }))
         .pipe(gulp.dest(dist))
