@@ -6,11 +6,12 @@ var pkg = require('./package.json');
 var option = {
     base: 'src'
 };
+var pluginName = "xqtree";
 var dist = __dirname + '/dist';
 
 var banner = [
     '/*!',
-    ' * xqTree v<%= pkg.version %> (<%= pkg.homepage %>)',
+    ' * ' + pluginName + ' v<%= pkg.version %> (<%= pkg.homepage %>)',
     ' * Copyright <%= new Date().getFullYear() %> xieqian.',
     ' * Licensed under the <%= pkg.license %> license',
     ' */',
@@ -22,7 +23,7 @@ gulp.task("build:less", function () {
         .pipe(plugins.less())
         .pipe(plugins.rename(function (path) {
             if (path.basename === "index") {
-                path.basename = 'xqtree';
+                path.basename = pluginName;
             }
         }))
         .pipe(plugins.header(banner, {
@@ -46,7 +47,7 @@ gulp.task("build:js", function () {
         }))
         .pipe(plugins.rename(function (path) {
             if (path.basename === "index") {
-                path.basename = 'xqtree';
+                path.basename = pluginName;
             }
         }))
         .pipe(plugins.header(banner, {
@@ -70,7 +71,8 @@ gulp.task("build:html", function () {
     gulp.src("src/*.html", option)
         .pipe(plugins.rename(function (path) {
             if (path.basename === "index") {
-                path.basename = 'xqtree';
+                // 不需要重命名
+                // path.basename = pluginName;
             }
         }))
         .pipe(plugins.tap(function (file) {
@@ -78,13 +80,13 @@ gulp.task("build:html", function () {
             contents = contents.replace(
                 /<link\s+rel="stylesheet"\s+href="(index.css)"\s+\/>/gi,
                 function () {
-                    return ('<link rel="stylesheet" href="xqtree.css"/>');
+                    return ('<link rel="stylesheet" href="' + pluginName + '.css"/>');
                 }
             );
             contents = contents.replace(
                 /<script\s+src="(index.js)"><\/script>/gi,
                 function () {
-                    return ('<script src="xqtree.js"></script>');
+                    return ('<script src="' + pluginName + '.js"></script>');
                 }
             );
             file.contents = new Buffer(contents);
@@ -129,7 +131,7 @@ gulp.task("server", function () {
         port: 12,
         open: 'external',
         host: 'localhost',
-        index: "xqtree.html"
+        index: pluginName + ".html"
     });
 });
 
